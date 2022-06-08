@@ -11,3 +11,5 @@ jobs:
         run: pacman-key --init
       - name: Update distribution packages
         run: pacman -Syu --noconfirm
+      - name: Check running environment
+        run: pacman -S --noconfirm neofetch && neofetch
