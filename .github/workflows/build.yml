@@ -1,0 +1,13 @@
+name: build
+on: push
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Generate signing key
+        run: pacman-key --init
+      - name: Update distribution packages
+        run: pacman -Syu
