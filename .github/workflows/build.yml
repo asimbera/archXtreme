@@ -10,4 +10,4 @@ jobs:
       - name: Generate signing key
         run: pacman-key --init
       - name: Update distribution packages
-        run: pacman -Syu
+        run: pacman -Syu --noconfirm
