@@ -6,33 +6,18 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
-      volumes:
-        - ${{ github.workspace }}/repo/pkgs:/data
-        - ${{ github.workspace }}/repo/cache:/var/cache/pacman/
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: repo
-      - uses: actions/cache@v3
-        with:
-          key: pacman-cache
-          path: ${{ github.workspace }}/repo/cache
-      - name: Generate signing key
-        run: pacman-key --init
-      - name: Update distribution packages
-        run: pacman -Syu --noconfirm
-      - name: Create build user
-        run: |
-          pacman -S --needed --noconfirm git sudo
-          useradd builder -m
-          passwd -d builder
-          printf '\nbuilder ALL=(ALL) ALL\n' | tee -a /etc/sudoers
-          chown -R builder:builder /data
+      # - uses: actions/cache@v3
+      #   with:
+      #     key: pacman-cache
+      #     path: ${{ github.workspace }}
+      - name: Setup build environment
+        run: bash setup.sh
 
       - name: Build google-chrome
         run: |
-          sudo -u builder bash -c "cd /data && git clone https://aur.archlinux.org/google-chrome.git"
-          sudo -u builder bash -c "cd /data/google-chrome && makepkg -s --noconfirm && ls -ll"
+          sudo -u builder bash -c "cd pkgs && git clone https://aur.archlinux.org/google-chrome.git && cd google-chrome && makepkg -s --noconfirm"
 
       # - name: Clone and build packages
       #   run: |
@@ -40,4 +25,4 @@ jobs:
       #     sudo -u builder bash -c "cd /data/rocm-arch/rocm-llvm && makepkg -s --noconfirm"
       - uses: actions/upload-artifact@v3
         with:
-          path: ${{ github.workspace }}/repo/pkgs/**/*.pkg.tar.zst
+          path: ${{ github.workspace }}/**/*.pkg.tar.zst
