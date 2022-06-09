@@ -7,9 +7,16 @@ jobs:
     container:
       image: archlinux:base-devel
       volumes:
-        - ${{ github.workspace }}:/data
+        - ${{ github.workspace }}/repo/pkgs:/data
+        - ${{ github.workspace }}/repo/cache:/var/cache/pacman/
     steps:
       - uses: actions/checkout@v3
+        with:
+          path: repo
+      - uses: actions/cache@v3
+        with:
+          key: pacman-cache
+          path: ${{ github.workspace }}/repo/cache
       - name: Generate signing key
         run: pacman-key --init
       - name: Update distribution packages
@@ -33,4 +40,4 @@ jobs:
       #     sudo -u builder bash -c "cd /data/rocm-arch/rocm-llvm && makepkg -s --noconfirm"
       - uses: actions/upload-artifact@v3
         with:
-          path: ${{ github.workspace }}/**/*.pkg.tar.zst
+          path: ${{ github.workspace }}/repo/pkgs/**/*.pkg.tar.zst
