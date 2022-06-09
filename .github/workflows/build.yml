@@ -7,7 +7,7 @@ jobs:
     container:
       image: archlinux:base-devel
       volumes:
-        - data:/data
+        - ${{ github.workspace }}/data:/data
     steps:
       - uses: actions/checkout@v3
       - name: Generate signing key
@@ -21,7 +21,13 @@ jobs:
           passwd -d builder
           printf '\nbuilder ALL=(ALL) ALL\n' | tee -a /etc/sudoers
           chown -R builder:builder /data
-      - name: Clone and build packages
+
+      - name: Build google-chrome
         run: |
-          sudo -u builder bash -c "cd /data && git clone https://github.com/rocm-arch/rocm-arch.git"
-          sudo -u builder bash -c "cd /data/rocm-arch/rocm-llvm && makepkg -s --noconfirm"
+          sudo -u builder bash -c "cd /data && git clone https://aur.archlinux.org/google-chrome.git"
+          sudo -u builder bash -c "cd /data/google-chrome && makepkg -s --noconfirm && ls -ll"
+
+      # - name: Clone and build packages
+      #   run: |
+      #     sudo -u builder bash -c "cd /data && git clone https://github.com/rocm-arch/rocm-arch.git"
+      #     sudo -u builder bash -c "cd /data/rocm-arch/rocm-llvm && makepkg -s --noconfirm"
