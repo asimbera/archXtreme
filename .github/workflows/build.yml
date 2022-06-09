@@ -7,7 +7,7 @@ jobs:
     container:
       image: archlinux:base-devel
       volumes:
-        - ${{ github.workspace }}/data:/data
+        - ${{ github.workspace }}:/data
     steps:
       - uses: actions/checkout@v3
       - name: Generate signing key
@@ -31,3 +31,6 @@ jobs:
       #   run: |
       #     sudo -u builder bash -c "cd /data && git clone https://github.com/rocm-arch/rocm-arch.git"
       #     sudo -u builder bash -c "cd /data/rocm-arch/rocm-llvm && makepkg -s --noconfirm"
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ${{ github.workspace }}/**/*.pkg.tar.zst
