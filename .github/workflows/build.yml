@@ -7,7 +7,13 @@ jobs:
     container:
       image: archlinux:base-devel
     steps:
+      - uses: actions/checkout@v3
       - name: Generate signing key
         run: pacman-key --init
       - name: Update distribution packages
         run: pacman -Syu --noconfirm
+      - name: Build rocm-llvm package
+        run: |
+          cd ./rocm-llvm
+          makepkg -S
+          ls -ll
