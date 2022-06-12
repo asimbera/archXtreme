@@ -15,9 +15,9 @@ jobs:
       - name: Setup build environment
         run: bash setup.sh
 
-      - name: Build google-chrome
+      - name: Build rocm-llvm
         run: |
-          sudo -u builder bash -c "cd pkgs && git clone https://aur.archlinux.org/google-chrome.git && cd google-chrome && makepkg -s --noconfirm"
+          sudo -u builder bash -c "cd pkgs && git clone https://aur.archlinux.org/rocm-llvm.git && cd rocm-llvm && makepkg -s --noconfirm"
 
       # - name: Clone and build packages
       #   run: |
